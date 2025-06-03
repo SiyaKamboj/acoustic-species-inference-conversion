@@ -1,4 +1,4 @@
-# acoustic-species-inference-conversion
+# Acoustic Species Inference Conversion
 ## by Siya Kamboj
 
 ### Abstract
