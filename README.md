@@ -18,6 +18,7 @@ To monitor biodiversity in a non-invasive way, researchers deploy acoustic logge
     - export ORT_LIB_LOCATION=/opt/homebrew/lib
 - cd burn_app
 - cargo run
+    - NOTE: All necessary wrappers/information is called through the main.rs file
 
 ### Run The Original Code (Python Inference)
 NOTE: You must have access to kastner-ml, which is a remote server. Additionally, you must be able to git clone https://github.com/UCSD-E4E/pyha-analyzer-2.0 , which is a beta, minimized inference script with fewer bugs. 
@@ -31,10 +32,23 @@ NOTE: You must have access to kastner-ml, which is a remote server. Additionally
     - Paste location of your python within the uv venv. In my case, it was `/home/s.kamboj.400/pyha-analyzer-2.0/.venv/bin/python`
 
 ### Important Notes
-It should be noted that since pyha_analayzer_2.0 is a clone of a private github repo, github prevents you from being able to see the file contents. Therefore, I placed a copy of my rust code, main.rs, in the home directory. Even though this code cannot be run in a meaningful way from the home directory, it does document the work that was done. 
+It should be noted that since pyha_analayzer_2.0 is a clone of a private github repo, github prevents you from being able to see the file contents. Therefore, I placed a copy of the code I wrote in the folder "code_written" in the home directory. The main file to look at in this directory is called main.rs, while the other pieces of code are wrappers for importing different python modules, the model imported through onnx, etc. Even though this code cannot be run in a meaningful way from the home directory, it does document the work that was done. 
 
 To understand the full file structure, please consult this image: 
 ![image](images/FileStructure.png)
+
+### About This Project
+#### Background
+Acoustic species identification is a citizen science-based research project that uses machine learning to monitor the biodiversity of bird species. In this project, acoustic loggers are deployed in natural environments to record real-time bird audio data. This audio is then converted into spectrograms. Afterwards, we can then use computer vision algorithms to identify tracking and understanding biodiversity over time.
+
+Currently, I have been working with other students to create a desktop app that enables our collaborators at the San Diego Zoo Wildlife Alliance to run our Python-based inference script on their local devices. However, the current script is slow, computationally inefficient, and requires connecting to a remote server. Therefore, this project focuses on converting the Python inference script into Rust—a high-performance, memory-safe programming language—to optimize the classification pipeline and make it easier to deploy without a web server. Once the standalone Rust implementation is complete, it will be integrated into the existing Electrondesktop application to contribute to the species identification workflow for our collaborators.
+
+#### Project Timeline
+##### Pre-Processing
+
+
+
+
 
 
 
