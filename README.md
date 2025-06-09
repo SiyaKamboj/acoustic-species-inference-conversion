@@ -43,8 +43,8 @@ Acoustic species identification is a citizen science-based research project that
 
 Currently, I have been working with other students to create a desktop app that enables our collaborators at the San Diego Zoo Wildlife Alliance to run our Python-based inference script on their local devices. However, the current script is slow, computationally inefficient, and requires connecting to a remote server. Therefore, this project focuses on converting the Python inference script into Rust—a high-performance, memory-safe programming language—to optimize the classification pipeline and make it easier to deploy without a web server. Once the standalone Rust implementation is complete, it will be integrated into the existing Electrondesktop application to contribute to the species identification workflow for our collaborators.
 
-#### Project Timeline
-##### Pre-Processing
+### Project Timeline
+#### Pre-Processing
 
 
 
