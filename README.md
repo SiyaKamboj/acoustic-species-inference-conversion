@@ -9,7 +9,7 @@ To monitor biodiversity in a non-invasive way, researchers deploy acoustic logge
 - Midpoint Presentation: https://docs.google.com/presentation/d/14yESbDrgv_Fm4Z0y2W2DdVJx4XK_dFmQiILIhqsL5zo/edit?usp=sharing
 - Final Presentation: https://docs.google.com/presentation/d/1KW4EVF14d5Ywq7Dlyfhr5BObpYU8zk9Tii_ZmJp0y0w/edit?usp=sharing
 
-### Run the Code
+### Run the Code In This Repo (Rust Inference)
 - cd pyha-analyzer-2.0
 - source .venv/bin/activate
 - export PYTHONPATH="/Users/siyakamboj/Downloads/acoustic-species-inference-conversion/pyha-analyzer-2.0/burn_app/pyha_analyzer:$PYTHONPATH"
@@ -19,6 +19,16 @@ To monitor biodiversity in a non-invasive way, researchers deploy acoustic logge
 - cd burn_app
 - cargo run
 
+### Run The Original Code (Python Inference)
+NOTE: You must have access to kastner-ml, which is a remote server. Additionally, you must be able to git clone https://github.com/UCSD-E4E/pyha-analyzer-2.0 , which is a beta, minimized inference script with fewer bugs. 
+- ssh kastner-ml
+- cd pyha-analyzer-2.0
+- source .venv/bin/activate (It should be noted that this is a uv virtual environment, not a pip virtual environment)
+- Navigate to train_demo.ipynb 
+- Set up your kernel:
+    - cmd+shift+p to see vscode command pallete
+    - Type and select "Python: Select Interpreter"
+    - Paste location of your python within the uv venv. In my case, it was `/home/s.kamboj.400/pyha-analyzer-2.0/.venv/bin/python`
 
 ### Important Notes
 It should be noted that since pyha_analayzer_2.0 is a clone of a private github repo, github prevents you from being able to see the file contents. Therefore, I placed a copy of my rust code, main.rs, in the home directory. Even though this code cannot be run in a meaningful way from the home directory, it does document the work that was done. 
