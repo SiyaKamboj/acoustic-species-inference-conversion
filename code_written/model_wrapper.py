@@ -1,9 +1,9 @@
 import torch
-from pyha_analyzer.models import EfficentNet  # or wherever your model is
+from pyha_analyzer.models import EfficentNet  
 
 # Instantiate your model as usual
-model = EfficentNet(num_classes=21)  # Replace 21 with the actual number of classes
-model.eval()  # Important: set to evaluation mode
+model = EfficentNet(num_classes=21) #21 bird classes
+model.eval()  # set to evaluation mode
 
 # Define a wrapper with only the parts needed for inference
 class ExportWrapper(torch.nn.Module):

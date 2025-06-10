@@ -236,6 +236,7 @@ fn run_python_preprocessing(split_data: &Vec<Sample>, split_name: &str) -> PyRes
 
 
 fn run_inference() -> Result<(), Box<dyn std::error::Error>> {
+    let num_epochs = 6;
     // Load ONNX model
     let environment = Arc::new(Environment::builder().with_name("inference").build()?);
     let mut session = environment
@@ -252,47 +253,53 @@ fn run_inference() -> Result<(), Box<dyn std::error::Error>> {
     //Run inference on mel files in the test directory
     let mel_dir = Path::new("../mel_outputs/test");
 
-    for entry in fs::read_dir(mel_dir)? {
-        let entry = entry?;
-        let path = entry.path();
+    for epoch in 1..=num_epochs {
+        println!("Epoch {}", epoch);
+        let epochStart = Instant::now();
+        for entry in fs::read_dir(mel_dir)? {
+            let entry = entry?;
+            let path = entry.path();
 
-        if path.extension().map(|ext| ext == "npy").unwrap_or(false)
-            && path.file_name().unwrap_or_default().to_str().unwrap_or("").contains("_mel")
-        {
-            let mel: ArrayD<f32> = read_npy(&path)?;
+            if path.extension().map(|ext| ext == "npy").unwrap_or(false)
+                && path.file_name().unwrap_or_default().to_str().unwrap_or("").contains("_mel")
+            {
+                let mel: ArrayD<f32> = read_npy(&path)?;
 
-            // Reshape to [1, 1, 256, 431]
-            let mel = mel.into_dimensionality::<ndarray::Ix3>()?;
-            let mel = mel.insert_axis(ndarray::Axis(0));
-            let input_tensor: Vec<ArrayD<f32>> = vec![mel.into_dyn()];
+                // Reshape to [1, 1, 256, 431]
+                let mel = mel.into_dimensionality::<ndarray::Ix3>()?;
+                let mel = mel.insert_axis(ndarray::Axis(0));
+                let input_tensor: Vec<ArrayD<f32>> = vec![mel.into_dyn()];
 
-            // Run inference
-            let outputs: Vec<OrtOwnedTensor<f32, _>> = session.run(input_tensor)?;
+                // Run inference
+                let outputs: Vec<OrtOwnedTensor<f32, _>> = session.run(input_tensor)?;
 
-            // Get output
-            let output_tensor = &outputs[0];
-            let logits = output_tensor
-                .view()
-                .to_owned()
-                .into_dimensionality::<Ix2>()?;
-            let logits_row = logits.row(0);
+                // Get output
+                let output_tensor = &outputs[0];
+                let logits = output_tensor
+                    .view()
+                    .to_owned()
+                    .into_dimensionality::<Ix2>()?;
+                let logits_row = logits.row(0);
 
-            // Get top predicted class index and score
-            if let Some((idx, score)) = logits_row.iter().enumerate().max_by(|a, b| a.1.partial_cmp(b.1).unwrap()) {
-                // println!(
-                //     "File: {} → Top Prediction: Class {} ({}) with score {:.4}",
-                //     path.file_name().unwrap().to_string_lossy(),
-                //     idx,
-                //     label_names[idx],
-                //     score
-                // );
-            } else {
-                println!(
-                    "File: {} → No prediction could be made.",
-                    path.file_name().unwrap().to_string_lossy()
-                );
+                // Get top predicted class index and score
+                if let Some((idx, score)) = logits_row.iter().enumerate().max_by(|a, b| a.1.partial_cmp(b.1).unwrap()) {
+                    // println!(
+                    //     "File: {} → Top Prediction: Class {} ({}) with score {:.4}",
+                    //     path.file_name().unwrap().to_string_lossy(),
+                    //     idx,
+                    //     label_names[idx],
+                    //     score
+                    // );
+                } else {
+                    println!(
+                        "File: {} → No prediction could be made.",
+                        path.file_name().unwrap().to_string_lossy()
+                    );
+                }
             }
         }
+        let epochduration = epochStart.elapsed();
+        println!("Epoch {} inference time: {:.2?}", epoch, epochduration);
     }
 
     Ok(())
